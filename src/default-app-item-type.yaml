@@ -1,0 +1,31 @@
+ApiPlatformAppType:
+    type: ApiPlatformAppType
+    hostname: "{%name%}.{%_root.hostname%}"
+    docker_compose:
+        enabled: true
+        image: kukusa/php:8.1-fpm-alpine-dev
+    db:
+        platform: mysql
+        host: 127.0.0.1
+        port: 3306
+        username: root
+        password: password
+        dbname: '{%name%}'
+        docker_compose:
+            enabled: false
+            image: mysql
+
+    gateway:
+        enabled: true
+        platform: caddy
+        docker_compose:
+            enabled: true
+            image: kukusa/caddy:2-api-platform-dev
+
+_prod:
+    ApiPlatformAppType:
+        docker_compose:
+            image: kukusa/php:8.1-fpm-alpine-{%db.platform%}
+        gateway:
+            docker_compose:
+                image: kukusa/caddy:2-api-platform
